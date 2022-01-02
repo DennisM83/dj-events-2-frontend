@@ -29,7 +29,7 @@ export default function AddEventPage() {
       toast.error("Please fill in all fields");
     }
 
-    const res = await fetch(`{API_URL}/events`, {
+    const res = await fetch(`${API_URL}/events`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
