@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Form.module.css";
+import { FaImage } from "react-icons/fa";
 
 export default function EditEventPage({ evt }) {
   const [values, setValues] = useState({
@@ -20,7 +21,9 @@ export default function EditEventPage({ evt }) {
     description: evt.description,
   });
 
-  const [imagePreview, setImagePreview] = useState(evt.image ? evt.image.formats.thumbnail.url : null)
+  const [imagePreview, setImagePreview] = useState(
+    evt.image ? evt.image.formats.thumbnail.url : null
+  );
 
   const router = useRouter();
 
@@ -34,18 +37,18 @@ export default function EditEventPage({ evt }) {
     }
 
     const res = await fetch(`${API_URL}/events/${evt.id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(values)
-    })
+      body: JSON.stringify(values),
+    });
 
-    if(!res.ok) {
-      toast.error('Something went wrong')
+    if (!res.ok) {
+      toast.error("Something went wrong");
     } else {
-      const evt = await res.json()
-      router.push(`/events/${evt.slug}`)
+      const evt = await res.json();
+      router.push(`/events/${evt.slug}`);
     }
   };
 
@@ -58,7 +61,7 @@ export default function EditEventPage({ evt }) {
     <Layout title="Add new event">
       <Link href="/events">Go Back</Link>
       <h1>Edit Event</h1>
-      <ToastContainer/>
+      <ToastContainer />
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
           <div>
@@ -107,7 +110,7 @@ export default function EditEventPage({ evt }) {
               type="date"
               id="date"
               name="date"
-              value={moment(values.date).format('yyyy-MM-DD')}
+              value={moment(values.date).format("yyyy-MM-DD")}
               onChange={handleInputChange}
             ></input>
           </div>
@@ -137,19 +140,26 @@ export default function EditEventPage({ evt }) {
 
       <h2>Event Image</h2>
       {imagePreview ? (
-          <Image alt='event image' src={imagePreview} height={100} width={170} />
-      ) : <div>No image available</div>}
+        <Image alt="event image" src={imagePreview} height={100} width={170} />
+      ) : (
+        <div>No image available</div>
+      )}
+      <div>
+        <button className="btn-secondary">
+          <FaImage /> Set Image
+        </button>
+      </div>
     </Layout>
   );
 }
 
-export async function getServerSideProps({params: {id}}) {
-    const res = await fetch(`${API_URL}/events/${id}`)
-    const evt = await res.json()
+export async function getServerSideProps({ params: { id } }) {
+  const res = await fetch(`${API_URL}/events/${id}`);
+  const evt = await res.json();
 
-    return {
-        props: {
-            evt
-        }
-    }
+  return {
+    props: {
+      evt,
+    },
+  };
 }
